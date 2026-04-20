@@ -1,0 +1,54 @@
+{
+"UCDFS_Car_brake_F": {
+	"variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description", {"stepDis":10, "subCategory":"Front"}],
+        ["$frontBrakeTorque", "range", "Nm", "Braking", 500, 50, 1000, "Front Brake Torque", ""]
+    ],
+    "information":{
+        "authors":"HS",
+        "name":"Front Brakes",
+        "value":200,
+    },
+    "slotType" : "template_car_brake_F",
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //insert desired meshes here
+    ],
+    "pressureWheels":[
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"enableABS":true},
+        {"brakeTorque":"$frontBrakeTorque"}, //1500
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":0},
+        {"brakeSpring":125},
+    ],
+},
+
+"UCDFS_Car_brake_R": {
+		"variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description", {"stepDis":10, "subCategory":"Rear"}],
+        ["$rearBrakeTorque", "range", "Nm", "Braking", 100, 50, 1000, "Rear Brake Torque", ""]
+    ],
+    "information":{
+        "authors":"HS",
+        "name":"Rear Brakes",
+        "value":200,
+    },
+    "slotType" : "template_car_brake_R",
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //insert desired meshes here
+    ],
+    "pressureWheels":[
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"enableABS":true},
+        {"brakeTorque":"$rearBrakeTorque"}, //750
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":1500},
+        {"brakeSpring":125},
+    ],
+},
+
+},

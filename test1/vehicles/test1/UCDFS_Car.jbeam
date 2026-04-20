@@ -1,0 +1,25 @@
+{"UCDFS_Car": {
+    "information":{
+        "authors":"HS",
+        "name":"UCDFS Car",
+    },
+
+    "slotType" : "main",
+    "slots2": [                                                                                                                                                             //best to use slots2 as it allows for more flexibility and it is the most current slot system
+        ["name",                            "allowTypes",                           "denyTypes",            "default",                              "description"],         //additional arguments
+        ["UCDFS_Car_engine",             ["UCDFS_Car_engine"],                    [],                 "UCDFS_Car_electricMotor",               "Engine"],
+        ["UCDFS_Car_suspension_F",       ["UCDFS_Car_suspension_F"],              [],                 "UCDFS_Car_doublewishbone_F",        "Front Suspension",     {"nodeOffset":{"x":-0.0, "y":0.4, "z":0.325}}], //0.15, 0, 0.325
+        ["UCDFS_Car_suspension_R",       ["UCDFS_Car_suspension_R"],              [],                 "UCDFS_Car_doublewishbone_R",        "Rear Suspension",      {"nodeOffset":{"x":0, "y":2.0, "z":0.325}}],//0.15, 2, 0.325
+        ["UCDFS_Car_body",               ["UCDFS_Car_body"],                      [],                 "UCDFS_Car_body_sedan",                  "Body",             {"nodeOffset":{"x":0, "y":0.0, "z":-0.05},   "coreSlot":true}],
+    ],
+},
+}
+
+
+
+
+
+
+
+
+

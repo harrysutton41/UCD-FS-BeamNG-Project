@@ -1,0 +1,97 @@
+{
+  "generic_car_parametrized_main": {
+    "name": "generic_car_parametrized_main",
+    "mapTo": "generic_car_parametrized",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.3,
+		  0.3,
+		  0.3,
+		  1
+		  
+		  //0.588294029,
+          //0.001998425,
+          //0.0104050599,
+          //1
+        ],
+        "metallicFactor": 0.42899999
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      }
+    ],
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+  "generic_car_parametrized1": {
+    "name": "generic_car_parametrized1",
+    "mapTo": "generic_car_parametrized1",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.588294029,
+          0.001998425,
+          0.0104050599,
+          1
+        ],
+        "metallicFactor": 0.42899999
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      }
+    ],
+    "translucentBlendOp": "None",
+    "version": 1.5
+},
+  "colourHS1": {
+    "name": "colourHS1",
+    "mapTo": "colourHS1",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.02,
+          0.01,
+          0.67,
+          1
+        ],
+        "metallicFactor": 0.42899999
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "metallicFactor": null
+      }
+    ],
+    "translucentBlendOp": "None",
+    "version": 1.5
+},
+}
