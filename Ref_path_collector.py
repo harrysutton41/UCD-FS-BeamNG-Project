@@ -15,7 +15,6 @@ WAYPOINTS = [
 POLL_INTERVAL = 0.05
 MAX_RUNTIME   = 180
 MIN_MOVE_DIST = 0.25   # only save a new point if car moved at least this far
-FINISH_SPEED_THRESHOLD = 1.0  # m/s, helps detect when lap is basically complete
 
 
 def cumulative_s(x, y, z):
@@ -52,6 +51,7 @@ def main():
     time.sleep(2.0)
 
     print("Starting AI waypoint run to record reference path...")
+    print("Press Ctrl+C when you want to stop and save the path.")
     vehicle.ai.drive_using_waypoints(
         WAYPOINTS,
         drive_in_lane=False,
@@ -77,8 +77,6 @@ def main():
             vehicle.sensors.poll()
             state = vehicle.sensors["state"]
             pos = np.array(state["pos"], dtype=float)
-            vel = np.array(state["vel"], dtype=float)
-            speed = np.linalg.norm(vel)
 
             if last_saved is None:
                 x_data.append(pos[0])
@@ -95,19 +93,13 @@ def main():
                     last_saved = pos.copy()
                     samples += 1
 
-            # crude finish condition:
-            # after enough time has passed, if car slows down near route end, stop recording
-            if len(x_data) > 100 and (time.time() - start_time) > 20 and speed < FINISH_SPEED_THRESHOLD:
-                print("Vehicle has slowed near route end. Finishing reference path recording.")
-                break
-
             if samples % 50 == 0 and samples > 0:
                 print(f"Recorded {samples} reference points...")
 
             time.sleep(POLL_INTERVAL)
 
     except KeyboardInterrupt:
-        print("\nStopped by user.")
+        print("\nStopped by user. Saving reference path...")
 
     finally:
         if len(x_data) < 2:
