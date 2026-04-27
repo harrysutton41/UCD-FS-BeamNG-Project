@@ -1,0 +1,85 @@
+# Blender 4.2 script: export vertices & edges and label vertices with the Empty objects they are snapped to
+import bpy, os
+from mathutils.kdtree import KDTree
+
+# === User options ===
+TOLERANCE = 1e-5        # max distance (Blender units) between vertex and empty to be considered "snapped".
+USE_EVALUATED_MESH = False  # Set True if you want the final evaluated mesh (modifiers applied) positions.
+CREATE_VERTEX_GROUPS = False # Set True to create a vertex group for each empty and assign the matched vertex to it.
+# ======================
+
+obj = bpy.context.active_object
+if obj is None or obj.type != 'MESH':
+    raise SystemExit("Please select a mesh object (make it the active object) and run again.")
+
+# remember and ensure Object mode for safe reading
+orig_mode = bpy.context.mode
+if orig_mode != 'OBJECT':
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+# get mesh (evaluated or original) and matching world matrix
+if USE_EVALUATED_MESH:
+    deps = bpy.context.evaluated_depsgraph_get()
+    eval_obj = obj.evaluated_get(deps)
+    mesh = eval_obj.data
+    world_mat = eval_obj.matrix_world
+else:
+    mesh = obj.data
+    world_mat = obj.matrix_world
+
+# collect empties in the scene
+empties = [o for o in bpy.context.scene.objects if o.type == 'EMPTY']
+
+# build KDTree of empties positions (world space)
+empty_names = []
+if empties:
+    tree = KDTree(len(empties))
+    for i, e in enumerate(empties):
+        tree.insert(e.matrix_world.translation, i)
+        empty_names.append(e.name)
+    tree.balance()
+
+# map vertices -> nearest empty (if within TOLERANCE)
+vert_to_empty = {}
+vert_world_coords = []
+for i, v in enumerate(mesh.vertices):
+    co_world = world_mat @ v.co
+    vert_world_coords.append(co_world)
+    matched_name = None
+    if empties:
+        co, index, dist = tree.find(co_world)
+        if dist <= TOLERANCE:
+            matched_name = empties[index].name
+    vert_to_empty[i] = matched_name
+
+# Optionally create vertex groups on the ORIGINAL object (can't create on evaluated mesh)
+if CREATE_VERTEX_GROUPS and not USE_EVALUATED_MESH:
+    for v_idx, ename in vert_to_empty.items():
+        if ename:
+            vg = obj.vertex_groups.get(ename) or obj.vertex_groups.new(name=ename)
+            vg.add([v_idx], 1.0, 'REPLACE')
+
+# write output to Desktop
+desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+outpath = os.path.join(desktop, f"{obj.name}_verts_edges_empties.txt")
+with open(outpath, "w", encoding="utf-8") as f:
+    f.write(f"Object: {obj.name}\n")
+    f.write(f"Use evaluated mesh: {USE_EVALUATED_MESH}\n")
+    f.write(f"Tolerance: {TOLERANCE}\n\n")
+    f.write("Vertices (index: x, y, z -> empty_name)\n")
+    for i, co in enumerate(vert_world_coords):
+        name = vert_to_empty.get(i) or "---"
+        f.write(f"{i}: ({co.x:.6f}, {co.y:.6f}, {co.z:.6f}) -> {name}\n")
+
+    f.write("\nEdges (index: v1(index/name) - v2(index/name))\n")
+    for i, e in enumerate(mesh.edges):
+        v1, v2 = e.vertices
+        n1 = vert_to_empty.get(v1) or "---"
+        n2 = vert_to_empty.get(v2) or "---"
+        f.write(f"{i}: {v1} ({n1}) - {v2} ({n2})\n")
+
+print("Done — wrote:", outpath)
+
+# restore original mode
+if orig_mode != 'OBJECT':
+    bpy.ops.object.mode_set(mode=orig_mode)
