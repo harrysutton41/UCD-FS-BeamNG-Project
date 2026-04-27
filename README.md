@@ -59,3 +59,7 @@ University College Dublin
 ## Project
 
 *The Development and Evaluation of a Digital Model for a Formula Student Vehicle in BeamNG with Python & BeamNGpy* (2026)
+
+## AI
+
+OpenAI's ChatGPT 5.5 was used as an aid in creation and debugging of Python and MATLAB code
